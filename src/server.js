@@ -2,13 +2,16 @@ import http from 'http';
 import url from 'url';
 
 import config from './config';
+import { getHostname } from './Utils';
+
 // Handlers
 import FileHandler from './handlers/file.handler';
 import ICSParserHandler from './handlers/icsParser.handler';
 
 const requestHandler = (req, res) => {
 
-    const origin = req.headers.origin;
+    const origin = getHostname(req.headers.origin);
+    console.log(origin)
     const fileHandler = new FileHandler(req, res);
     const icsParserHandler = new ICSParserHandler(req, res);
 
