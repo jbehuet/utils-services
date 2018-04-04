@@ -9,14 +9,13 @@ import ICSParserHandler from './handlers/icsParser.handler';
 
 const requestHandler = (req, res) => {
 
-    const parsedOrigin = url.parse(req.headers.origin);
     const fileHandler = new FileHandler(req, res);
     const icsParserHandler = new ICSParserHandler(req, res);
 
-    if (config.allowedOrigins.indexOf(parsedOrigin.hostname) > -1) {
-        res.setHeader('Access-Control-Allow-Origin', `${parsedOrigin.protocol}//${parsedOrigin.hostname}${(parsedOrigin.port ? ':'+ parsedOrigin.port :'')}`);
-        res.setHeader('Access-Control-Request-Method', `${parsedOrigin.protocol}//${parsedOrigin.hostname}${(parsedOrigin.port ? ':'+ parsedOrigin.port :'')}`);
-        res.setHeader('Access-Control-Allow-Headers', `${parsedOrigin.protocol}//${parsedOrigin.hostname}${(parsedOrigin.port ? ':'+ parsedOrigin.port :'')}`);
+    if (req.headers.origin && config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) > -1) {
+        res.setHeader('Access-Control-Allow-Origin', "*");
+        res.setHeader('Access-Control-Request-Method', "*");
+        res.setHeader('Access-Control-Allow-Headers', "*");
         res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
     }
 
