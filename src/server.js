@@ -2,7 +2,6 @@ import http from 'http';
 import url from 'url';
 
 import config from './config';
-import { getHostname } from './Utils';
 
 // Handlers
 import FileHandler from './handlers/file.handler';
