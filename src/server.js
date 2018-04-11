@@ -1,33 +1,54 @@
 import http from 'http';
-import url from 'url';
+import path from 'path';
+import express from 'express';
+import bodyParser from 'body-parser';
+import methodOverride from 'method-override';
 
 import config from './config';
 
 // Handlers
-import FileHandler from './handlers/file.handler';
 import ICSParserHandler from './handlers/icsParser.handler';
+import NotifyHandler from './handlers/notify.handler';
 
-const requestHandler = (req, res) => {
+// Express application
+const app = express();
+app.use(bodyParser.json());
+app.use(methodOverride());
 
-    const fileHandler = new FileHandler(req, res);
-    const icsParserHandler = new ICSParserHandler(req, res);
+// STATIC
+app.use(express.static(path.resolve(__dirname, '../public/')));
 
+// CORS
+app.use((req, res, next) => {
     if (req.headers.origin && config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) > -1) {
         res.setHeader('Access-Control-Allow-Origin', "*");
         res.setHeader('Access-Control-Request-Method', "*");
         res.setHeader('Access-Control-Allow-Headers', "*");
-        res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+        res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, DELETE');
     }
+    next();
+})
 
-    const query = url.parse(req.url, true).query;
-    if (!query.url) {
-        fileHandler.render();
-    } else {
-        icsParserHandler.parse(query.url);
-    }
-}
+// Handlers
+app.use('/ics', new ICSParserHandler().router);
+app.use('/notify', new NotifyHandler().router);
 
-const server = http.createServer(requestHandler);
+// Error handler
+app.use((err, req, res, next) => {
+    res.status(400).json({ message: err.message });
+})
+
+// Index
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../public/', 'index.html'));
+});
+
+// Redirect otherwise
+app.get('*', (req, res) => {
+    res.redirect('/');
+});
+
+const server = http.createServer(app);
 server.listen(config.port);
 
 console.log('Server listening on ' + config.port)

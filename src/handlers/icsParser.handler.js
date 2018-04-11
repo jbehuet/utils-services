@@ -1,12 +1,12 @@
+import { Router } from 'express';
 import fetch from 'node-fetch';
 import ical from 'ical.js';
 
-import RequestHandler from "./request.handler";
-
-class ICSParserHandler extends RequestHandler {
+class ICSParserHandler {
 
     constructor(req, res) {
-        super(req, res);
+        this.router = Router();
+        this.router.get('/', this.parse.bind(this));
     }
 
     flattenEvent(e) {
@@ -18,18 +18,25 @@ class ICSParserHandler extends RequestHandler {
         return event;
     }
 
-    parse(url) {
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                let parsed = ical.parse(data);
-                let events = parsed[2];
-                let result = events.map(e => this.flattenEvent(e));
-                this.res.writeHeader(200, { "Content-Type": "application/json" });
-                this.res.write(JSON.stringify(result));
-                this.res.end();
-            })
-            .catch(e => this.showError(e));
+    parse(req, res, next) {
+        if (!req.query.url) {
+            next({ message: 'Missing url parameter' });
+        } else {
+            fetch(req.query.url)
+                .then(response => response.text())
+                .then(data => {
+                    try {
+                        let parsed = ical.parse(data);
+                        let events = parsed[2];
+                        let result = events.map(e => this.flattenEvent(e));
+                        res.json(result);
+                    } catch (error) {
+                        next(error)
+                    }
+
+                })
+                .catch(e => next(e));
+        }
     }
 }
 
