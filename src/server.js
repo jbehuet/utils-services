@@ -3,6 +3,7 @@ import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
+import url from 'url';
 
 import config from './config';
 
@@ -20,6 +21,7 @@ app.use(express.static(path.resolve(__dirname, '../public/')));
 
 // CORS
 app.use((req, res, next) => {
+    console.log(req.headers.origin, config.allowedOrigins)
     if (req.headers.origin && config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) > -1) {
         res.setHeader('Access-Control-Allow-Origin', "*");
         res.setHeader('Access-Control-Request-Method', "*");
