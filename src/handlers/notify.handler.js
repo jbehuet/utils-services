@@ -4,21 +4,21 @@ class NotifyHandler {
 
     constructor() {
         this.router = Router();
-        this.router.post('/subsribe', this.subsribe.bind(this));
-        this.router.post('/unsubsribe', this.subsribe.bind(this));
-        this.router.post('/notify', this.subsribe.bind(this));
+        this.router.post('/subscribe', this.subscribe.bind(this));
+        this.router.post('/unsubscribe', this.unsubscribe.bind(this));
+        this.router.post('/notify', this.notify.bind(this));
     }
 
-    subsribe(req, res, next) {
-        
+    subscribe(req, res, next) {
+
     }
 
-    unsubsribe(req, res, next) {
-        
+    unsubscribe(req, res, next) {
+
     }
 
     notify(req, res, next) {
-        
+
     }
 }
 
