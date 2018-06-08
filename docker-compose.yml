@@ -1,0 +1,12 @@
+version: '2'
+
+services:  
+    utils-services:
+        container_name: utils-services
+        image: utils-services:master
+        working_dir: /var/www/html/
+        environment:
+            - NODE_ENV=production
+            - PORT=3000
+        ports:
+            - 3000:3000

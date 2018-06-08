@@ -1,0 +1,24 @@
+image: docker:17.09
+
+#variables:
+#  GIT_STRATEGY: none
+
+services:
+  - docker:17.09-dind
+
+build:
+  stage: build
+  script:
+    - docker build --pull -t "utils-services:$CI_COMMIT_REF_NAME" .
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  script:
+    - docker-compose pull && docker-compose down ; docker-compose up -d --force-recreate && sleep 30 && docker-compose logs utils-services
+  environment:
+    name: development
+  only:
+    - master
+
