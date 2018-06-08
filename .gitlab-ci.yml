@@ -16,6 +16,12 @@ build:
 deploy:
   stage: deploy
   script:
+    - apk update
+    - apk upgrade
+    - apk add python python-dev py-pip build-base
+    - curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+    - chmod +x /usr/local/bin/docker-compose
+    - pip install docker-compose
     - docker-compose pull && docker-compose down ; docker-compose up -d --force-recreate && sleep 30 && docker-compose logs utils-services
   environment:
     name: development
