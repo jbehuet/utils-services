@@ -8,5 +8,6 @@ services:
         environment:
             - NODE_ENV=production
             - PORT=3000
+            - ALLOWED_ORIGINS="localhost.kihon.fr,kihon.fr"
         ports:
             - 127.0.0.1:3001:3000
