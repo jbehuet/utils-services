@@ -1,10 +1,10 @@
-image: docker:17.09
+image: docker:latest
 
 #variables:
 #  GIT_STRATEGY: none
 
 services:
-  - docker:17.09-dind
+  - docker:dind
 
 build:
   stage: build
