@@ -9,6 +9,7 @@ import config from './config';
 
 // Handlers
 import ICSParserHandler from './handlers/icsParser.handler';
+import RSSParserHandler from './handlers/rssParser.handler';
 import NotifyHandler from './handlers/notify.handler';
 
 // Express application
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
 
 // Handlers
 app.use('/ics', new ICSParserHandler().router);
+app.use('/rss', new RSSParserHandler().router);
 app.use('/notify', new NotifyHandler().router);
 
 // Error handler
