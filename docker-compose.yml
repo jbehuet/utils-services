@@ -9,5 +9,7 @@ services:
             - NODE_ENV=production
             - PORT=3000
             - ALLOWED_ORIGINS=localhost.kihon.fr,kihon.fr,www.kihon.fr
+        volumes:
+            - /data/lowdb:/var/www/html/db/
         ports:
             - 127.0.0.1:3001:3000

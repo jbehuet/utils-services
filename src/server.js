@@ -10,7 +10,7 @@ import config from './config';
 // Handlers
 import ICSParserHandler from './handlers/icsParser.handler';
 import RSSParserHandler from './handlers/rssParser.handler';
-import NotifyHandler from './handlers/notify.handler';
+import MessagingHandler from './handlers/messaging.handler';
 
 // Express application
 const app = express();
@@ -22,7 +22,6 @@ app.use(express.static(path.resolve(__dirname, '../public/')));
 
 // CORS
 app.use((req, res, next) => {
-    console.log(req.headers.origin, config.allowedOrigins)
     if (req.headers.origin && config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) > -1) {
         res.setHeader('Access-Control-Allow-Origin', "*");
         res.setHeader('Access-Control-Request-Method', "*");
@@ -35,7 +34,7 @@ app.use((req, res, next) => {
 // Handlers
 app.use('/ics', new ICSParserHandler().router);
 app.use('/rss', new RSSParserHandler().router);
-app.use('/notify', new NotifyHandler().router);
+app.use('/messaging', new MessagingHandler().router);
 
 // Error handler
 app.use((err, req, res, next) => {
