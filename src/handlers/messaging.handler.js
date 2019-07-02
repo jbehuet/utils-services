@@ -3,7 +3,7 @@ import Datastore from "nedb";
 import FCM from "fcm-push";
 import config from "../config";
 
-const DB_FILE = "./db/messaging.db";
+const DB_FILE = "./db/subscriptions.db";
 
 class MessagingHandler {
   constructor() {
