@@ -9,9 +9,8 @@ services:
             - NODE_ENV=production
             - PORT=3000
         env_file:
-            - production.env
+            - /var/www/utils-services/production.env
         volumes:
             - /data/nedb:/var/www/html/db/
-            - /var/www/utils-services:/var/www/html/
         ports:
             - 127.0.0.1:3001:3000
