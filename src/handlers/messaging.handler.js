@@ -10,20 +10,22 @@ class MessagingHandler {
     this.router = Router();
     this.router.post("/subscribe", this.subscribe.bind(this));
     this.router.post("/unsubscribe", this.unsubscribe.bind(this));
+    this.router.get(
+      "/subscription/:app/:token",
+      this.getSubscription.bind(this)
+    );
+    this.router.put(
+      "/subscription/:subscription_id",
+      this.updateSubscription.bind(this)
+    );
     this.router.post("/notify/:app/:token", this.notify.bind(this));
 
     this._initDatabase();
-    this._initFCM();
   }
 
   _initDatabase() {
     this.db = new Datastore({ filename: DB_FILE });
     this.db.loadDatabase();
-  }
-
-  _initFCM() {
-    if (!config.FCM) return;
-    this.fcm = new FCM(config.FCM);
   }
 
   subscribe(req, res, next) {
@@ -49,6 +51,36 @@ class MessagingHandler {
           res.status(200).send("Subscription deleted");
         } else {
           res.status(500).send(err);
+        }
+      }
+    );
+  }
+
+  getSubscription(req, res, next) {
+    // Get subscription with app and token
+    this.db.findOne(
+      { application: req.params.app, token: req.params.token },
+      (err, subscription) => {
+        if (!!subscription) {
+          res.json(subscription);
+        } else {
+          res.status(404).send("Subscription not found");
+        }
+      }
+    );
+  }
+
+  updateSubscription(req, res, next) {
+    // Update subscription form subscription id
+    this.db.update(
+      { _id: req.params.subscription_id },
+      { ...req.body },
+      {},
+      (err, numReplaced) => {
+        if (numReplaced > 0) {
+          res.status(200).send("Subscription updated");
+        } else {
+          res.status(404).send("Subscription not found");
         }
       }
     );
@@ -85,6 +117,9 @@ class MessagingHandler {
       return;
     }
 
+    // GET FCM with APP
+    const fcm = new FCM(config.FCM);
+
     if (req.params.token === "all") return this.notifyAll(req, res, next);
     const message = {
       to: req.params.token,
@@ -95,7 +130,7 @@ class MessagingHandler {
       data: {}
     };
 
-    this.fcm
+    fcm
       .send(message)
       .then(() => res.status(200).send("Sent successfull"))
       .catch(err => res.status(500).send(err));
