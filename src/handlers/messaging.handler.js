@@ -33,7 +33,7 @@ class MessagingHandler {
       { application: req.body.application, token: req.body.token },
       (err, doc) => {
         if (doc) {
-          res.status(409).send("Subscription exist");
+          res.status(409).send();
         } else {
           this.db.insert(req.body, (err, doc) => {
             res.status(201).json(doc);
@@ -48,7 +48,7 @@ class MessagingHandler {
       { application: req.body.application, token: req.body.token },
       err => {
         if (!err) {
-          res.status(200).json({});
+          res.status(200).send();
         } else {
           res.status(500).send(err);
         }
@@ -64,7 +64,7 @@ class MessagingHandler {
         if (!!subscription) {
           res.json(subscription);
         } else {
-          res.status(404).send("Subscription not found");
+          res.status(404).send();
         }
       }
     );
@@ -80,7 +80,7 @@ class MessagingHandler {
         if (numReplaced > 0) {
           res.status(200).send();
         } else {
-          res.status(404).send("Subscription not found");
+          res.status(404).send();
         }
       }
     );
