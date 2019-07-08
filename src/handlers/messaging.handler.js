@@ -78,7 +78,7 @@ class MessagingHandler {
       {},
       (err, numReplaced) => {
         if (numReplaced > 0) {
-          res.status(200).send("Subscription updated");
+          res.status(200).send();
         } else {
           res.status(404).send("Subscription not found");
         }
