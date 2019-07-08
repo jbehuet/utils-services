@@ -36,7 +36,7 @@ class MessagingHandler {
           res.status(409).send("Subscription exist");
         } else {
           this.db.insert(req.body, (err, doc) => {
-            res.status(201).send("Subscription created");
+            res.status(201).json(doc);
           });
         }
       }
@@ -48,7 +48,7 @@ class MessagingHandler {
       { application: req.body.application, token: req.body.token },
       err => {
         if (!err) {
-          res.status(200).send("Subscription deleted");
+          res.status(200).json({});
         } else {
           res.status(500).send(err);
         }
