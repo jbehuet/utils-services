@@ -26,7 +26,9 @@ dist/
 # dotenv environment variables file
 .env
 
+# Vscode
+.vscode
+
 # Mac
 .DS_Store
-
 db/*
