@@ -46,9 +46,13 @@ class MessagingHandler {
   unsubscribe(req, res, next) {
     this.db.remove(
       { application: req.body.application, token: req.body.token },
-      err => {
+      (err, nbRemoved) => {
         if (!err) {
-          res.status(200).send();
+          if (nbRemoved === 0) {
+            res.status(404).send();
+          } else {
+            res.status(200).send();
+          }
         } else {
           res.status(500).send(err);
         }
