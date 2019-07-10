@@ -5,7 +5,7 @@ const chaiHttp = require("chai-http");
 const { expect } = chai;
 chai.use(chaiHttp);
 
-const app = require("../src/server");
+const app = require("../src/server").app;
 const BASE_URL = "/messaging";
 
 const subscription = {

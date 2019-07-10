@@ -12,55 +12,80 @@ import ICSParserHandler from "./handlers/icsParser.handler";
 import RSSParserHandler from "./handlers/rssParser.handler";
 import MessagingHandler from "./handlers/messaging.handler";
 
-// Express application
-const app = express();
-app.use(bodyParser.json());
-app.use(methodOverride());
+class Server {
+  constructor() {
+    this.app = express();
 
-// STATIC
-app.use(express.static(path.resolve(__dirname, "../public/")));
+    this.app.on("ready", () => {
+      this.app.listen(config.port, () => {
+        if (process.env.NODE_ENV !== "test") {
+          console.log(
+            `API (${process.env.NODE_ENV}) running on http://localhost:${config.port}/api`
+          );
+        }
+      });
+    });
 
-// CORS
-app.use((req, res, next) => {
-  if (
-    req.headers.origin &&
-    config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) > -1
-  ) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Request-Method", "*");
-    res.setHeader("Access-Control-Allow-Headers", "*");
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "OPTIONS, GET, POST, PUT, DELETE"
-    );
+    this._setupMiddlewares();
+    this._setupHandlers();
   }
-  next();
-});
 
-// Handlers
-app.use("/ics", new ICSParserHandler().router);
-app.use("/rss", new RSSParserHandler().router);
-app.use("/messaging", new MessagingHandler().router);
+  _setupMiddlewares() {
+    // Parse application/x-www-form-urlencoded
+    this.app.use(bodyParser.urlencoded({ extended: false, limit: "1mb" }));
+    // Parse application/json
+    this.app.use(bodyParser.json({}));
+    this.app.use(methodOverride());
 
-// Error handler
-app.use((err, req, res, next) => {
-  res.status(400).json({ message: err.message });
-});
+    // STATIC
+    this.app.use(express.static(path.resolve(__dirname, "../public/")));
 
-// Index
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../public/", "index.html"));
-});
+    // CORS
+    this.app.use((req, res, next) => {
+      if (
+        req.headers.origin &&
+        config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) >
+          -1
+      ) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Request-Method", "*");
+        res.setHeader("Access-Control-Allow-Headers", "*");
+        res.setHeader(
+          "Access-Control-Allow-Methods",
+          "OPTIONS, GET, POST, PUT, DELETE"
+        );
+      }
+      next();
+    });
+  }
 
-// Redirect otherwise
-app.get("*", (req, res) => {
-  res.redirect("/");
-});
+  _setupHandlers() {
+    // Handlers
+    this.app.use("/ics", new ICSParserHandler().router);
+    this.app.use("/rss", new RSSParserHandler().router);
+    this.app.use("/messaging", new MessagingHandler().router);
 
-const server = http.createServer(app);
-server.listen(config.port);
+    // Error handler
+    this.app.use((err, req, res, next) => {
+      res.status(400).json({ message: err.message });
+    });
 
-console.log("Server listening on " + config.port);
+    // Index
+    this.app.get("/", (req, res) => {
+      res.sendFile(path.resolve(__dirname, "../public/", "index.html"));
+    });
 
-// Use only for test
-if (process.env.NODE_ENV === "test") module.exports = server;
+    // Redirect otherwise
+    this.app.get("*", (req, res) => {
+      res.redirect("/");
+    });
+  }
+}
+
+const server = new Server();
+
+if (process.env.NODE_ENV === "test") {
+  module.exports = server;
+} else {
+  server.app.emit("ready");
+}

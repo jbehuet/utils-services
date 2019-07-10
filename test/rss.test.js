@@ -4,7 +4,7 @@ const chaiHttp = require('chai-http');
 const { expect } = chai;
 chai.use(chaiHttp);
 
-const app = require('../src/server');
+const app = require('../src/server').app;
 
 describe('RSS', () => {
   describe('GET /rss without query url parameter', () => {
