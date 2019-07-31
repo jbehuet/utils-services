@@ -6,6 +6,16 @@ image: docker:latest
 services:
   - docker:dind
 
+test:
+  stage: test
+  image: node:alpine
+  before_script:
+    - npm ci
+  script:
+    - npm run test
+  only:
+    - master
+
 build:
   stage: build
   script:
