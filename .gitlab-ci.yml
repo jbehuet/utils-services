@@ -19,8 +19,7 @@ build:
 test:
   stage: test
   script:
-    - docker pull $IMAGE
-    - docker run $IMAGE npm test
+    - docker run $IMAGE npm run test
   only:
     - master
 
