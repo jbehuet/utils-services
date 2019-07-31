@@ -6,24 +6,21 @@ image: docker:latest
 services:
   - docker:dind
 
-stages:
-  - test
-  - build
-  - deploy
-
-test:
-  stage: test
-  image: node:alpine
-  script:
-    - npm install
-    - npm run test
-  only:
-    - master
+variables:
+  IMAGE: utils-services:$CI_COMMIT_REF_NAME
 
 build:
   stage: build
   script:
-    - docker build --pull -t "utils-services:$CI_COMMIT_REF_NAME" .
+    - docker build --pull -t $IMAGE .
+  only:
+    - master
+
+test:
+  stage: test
+  script:
+    - docker pull $IMAGE
+    - docker run $IMAGE npm test
   only:
     - master
 
