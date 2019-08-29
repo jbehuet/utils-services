@@ -1,4 +1,4 @@
-import http from "http";
+import 'babel-polyfill';
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
@@ -45,7 +45,7 @@ class Server {
       if (
         req.headers.origin &&
         config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) >
-          -1
+        -1
       ) {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Request-Method", "*");
