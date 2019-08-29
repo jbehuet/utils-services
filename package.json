@@ -20,7 +20,7 @@
     "method-override": "^2.3.10",
     "nedb": "^1.8.0",
     "node-fetch": "^2.1.2",
-    "rss-to-json": "^1.0.4"
+    "rss-parser": "^3.7.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
