@@ -19,7 +19,7 @@
     "ical.js": "^1.2.2",
     "method-override": "^2.3.10",
     "nedb": "^1.8.0",
-    "node-fetch": "^2.1.2",
+    "node-fetch": "^2.6.0",
     "rss-parser": "^3.7.2"
   },
   "devDependencies": {
