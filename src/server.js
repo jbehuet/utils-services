@@ -42,19 +42,19 @@ class Server {
 
     // CORS
     this.app.use((req, res, next) => {
-      if (
-        req.headers.origin &&
-        config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) >
-        -1
-      ) {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Request-Method", "*");
-        res.setHeader("Access-Control-Allow-Headers", "*");
-        res.setHeader(
-          "Access-Control-Allow-Methods",
-          "OPTIONS, GET, POST, PUT, DELETE"
-        );
-      }
+      // if (
+      //   req.headers.origin &&
+      //   config.allowedOrigins.indexOf(url.parse(req.headers.origin).hostname) >
+      //   -1
+      // ) {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Request-Method", "*");
+      res.setHeader("Access-Control-Allow-Headers", "*");
+      res.setHeader(
+        "Access-Control-Allow-Methods",
+        "OPTIONS, GET, POST, PUT, DELETE"
+      );
+      //}
       next();
     });
   }
