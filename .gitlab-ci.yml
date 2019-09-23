@@ -6,10 +6,20 @@ image: docker:latest
 services:
   - docker:dind
 
+variables:
+  IMAGE: utils-services:$CI_COMMIT_REF_NAME
+
 build:
   stage: build
   script:
-    - docker build --pull -t "utils-services:$CI_COMMIT_REF_NAME" .
+    - docker build --pull -t $IMAGE .
+  only:
+    - master
+
+test:
+  stage: test
+  script:
+    - docker run $IMAGE npm run test
   only:
     - master
 
@@ -21,4 +31,3 @@ deploy:
     name: development
   only:
     - master
-

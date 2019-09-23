@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import Feed from 'rss-to-json';
+import Parser from 'rss-parser';
 
 class RSSParserHandler {
 
     constructor(req, res) {
+        this.parser = new Parser();
         this.router = Router();
         this.router.get('/', this.parse.bind(this));
     }
@@ -17,13 +18,12 @@ class RSSParserHandler {
         return event;
     }
 
-    parse(req, res, next) {
+    async parse(req, res, next) {
         if (!req.query.url) {
             next({ message: 'Missing url parameter' });
         } else {
-            Feed.load(req.query.url, (err, rss)=>{
-                res.json(rss);
-            })
+            const feed = await this.parser.parseURL(req.query.url);
+            res.json(feed);
         }
     }
 }

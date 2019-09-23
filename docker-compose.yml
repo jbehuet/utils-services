@@ -8,6 +8,7 @@ services:
         environment:
             - NODE_ENV=production
             - PORT=3000
+            - ALLOWED_ORIGINS=jbehuet.github.io
         env_file:
             - /var/www/utils-services/production.env
         volumes:
