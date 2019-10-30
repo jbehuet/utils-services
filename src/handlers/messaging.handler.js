@@ -7,6 +7,7 @@ const DB_FILE = "./db/subscriptions.db";
 
 class MessagingHandler {
   constructor() {
+    if (config.FCM) console.log("Notification enabled")
     this.router = Router();
     this.router.post("/subscribe", this.subscribe.bind(this));
     this.router.post("/unsubscribe", this.unsubscribe.bind(this));
